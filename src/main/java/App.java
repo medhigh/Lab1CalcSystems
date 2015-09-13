@@ -2,7 +2,7 @@ import org.apache.commons.math.linear.*;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-
+import Jama.Matrix;
 /**
  * Created by medhigh on 9/8/15.
  */
@@ -22,7 +22,8 @@ public class App {
                         { 0, 0, 0, 0,0,0,0,0,0,-1,1},
                         { 0, 0, 0, 0,0,0,0,0,0,0,-1}
                 },false);
-        coefficients2.transpose();
+        RealMatrix copy = coefficients2.copy();
+        coefficients2= coefficients2.transpose();
         RealMatrix coefficientsImported =
                 new Array2DRowRealMatrix(new double[][] {
                         {-1.0d,0.0d,0.0d,0.0d,0.0d,0.0d,0.0d,0.0d,0.0d,0.0d},
@@ -41,7 +42,7 @@ public class App {
         DecompositionSolver solver = new LUDecompositionImpl(coefficients2).getSolver();
         DecompositionSolver solverImported = new LUDecompositionImpl(coefficientsImported).getSolver();
         System.out.println("1 method my Value :");
-        RealVector constants = new ArrayRealVector(new double[] {0, 0, 0, 0,0,0,0,0,0,0,-1}, false);
+        RealVector constants = new ArrayRealVector(new double[] {0, 0, 0, 0,0,0,0,0,0,0,1}, false);
         RealVector constantsImported = new ArrayRealVector(new double[] {-1, 0, 0, 0, 0, 0, 0, 0,0,0}, false);
         RealVector solution = solver.solve(constants);
         RealVector solutionImported = solverImported.solve(constantsImported);
@@ -52,7 +53,12 @@ public class App {
         for (double d:data){
             System.out.print(df.format(d)+" ");
         }
-        System.out.println();
+        print(coefficients2.getData());
+        Matrix A = new Matrix(coefficients2.getData());
+        Matrix B = new Matrix(constants.getData(), 11);
+        Matrix result = A.solve(B);
+        print(result.getArray());
+        /*System.out.println();
         System.out.println("1 method Imported Value :");
         for (double d:dataImported){
             System.out.print(df.format(d)+" ");
@@ -69,13 +75,21 @@ public class App {
         }
         System.out.println();
         sum=0;
-        System.out.println("_________________________________________________-"+"\n"+"Our value each line sum:");
-        for (double d[]:coefficients2.getData()){
+        System.out.println("_________________________________________________"+"\n"+"Our value each line sum:");
+        copy.transpose();
+        print(copy.getData()); */
+    }
+    public static void print(double[][] mass){
+        DecimalFormat df = new DecimalFormat();
+        df.setRoundingMode(RoundingMode.DOWN);
+        double sum = 0;
+        for (double d[]:mass){
             for (double varD: d){
-                //System.out.print(df.format(varD)+" ");
+                System.out.print(df.format(varD)+" ");
                 sum+=varD;
             }
-            System.out.print(df.format(sum)+" ");
+            System.out.println("   sum: "+df.format(sum)+" ");
         }
+
     }
 }

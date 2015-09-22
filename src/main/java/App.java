@@ -8,9 +8,9 @@ import Jama.Matrix;
  */
 public class App {
         static double[][] arr =  {
-                {0, 25, 50, 0, 100, 125, 0, 150, 0, 70, 0},//K
-                {100, 0, 0, 125, 0, 0, 150, 0, 175, 0, 200}, //L
-                {1, 0, 0, 1, 0, 0, 2, 0, 3, 0, 3}}; // N
+                {100, 0, 0, 125, 0, 0, 150, 0, 175, 0, 200}, //operations by L operator
+                {0, 25, 50, 0, 100, 125, 0, 150, 0, 70, 0},//bit per file operator(B)
+                {1, 0, 0, 1, 0, 0, 2, 0, 3, 0, 3}}; // file number
     public static void main(String[] args) {
         RealMatrix coefficients2 =
                 new Array2DRowRealMatrix(new double[][] {
@@ -37,24 +37,24 @@ public class App {
         double[] data = solution.getData();
         DecimalFormat df = new DecimalFormat();
         df.setRoundingMode(RoundingMode.DOWN);
-        System.out.println("Корни СЛАР:");
+        System.out.println("Корни уравнения:");
         for (double dd : data){
             System.out.print(df.format(dd)+" ");
         }
         System.out.println();
-        System.out.println("Среднее количество операций при одном прогоне: " +
+        System.out.println("Среднее число процессорных операций, выполняемых при одном прогоне алгоритма: " +
                 operationsByProcess(data, arr));
-        System.out.println("Среднее количество обращений к файлам:");
+        System.out.println("Среднее число обращений к файлам:");
         for (int i = 1; i< 4; i++)
         {
             System.out.println("  Файл " + i + " : "+ fileMiddleRequest(data, arr, i));
         }
-        System.out.println("Среднее количество инф при одном обращении к файлам:");
+        System.out.println("Среднее количество информации передаваемой при одном обращении к файлам:");
         for (int i = 1; i< 4; i++)
         {
             System.out.println("  Файл " + i + " : "+ bitsPerFileTransfer(data, arr, i));
         }
-        System.out.println("Сумма среднего количества обращений к основным операторам: " + operatorExecute(data, arr));
+        System.out.println("Сумма среднего числа обращений к основным операторам: " + operatorExecute(data, arr));
         System.out.println("Средняя трудоемкость этапа: " + middleWork(data, arr));
     }
     public static void print(double[][] mass){
@@ -69,12 +69,12 @@ public class App {
             System.out.println("   sum: "+df.format(sum)+" ");
         }
     }
-    // среднее кол-во обращений к файлам
+    // Подсчет среднего числа обращений к файлам
     public static double fileMiddleRequest(double[] returns, double[][] data, int fileNumber){
         double result = 0;
         for (int i = 0; i< returns.length; i++){
             if (data[2][i] == fileNumber)
-                result += returns[i];
+                result = result + returns[i];
         }
         return result;
 
@@ -83,16 +83,16 @@ public class App {
     public static double operationsByProcess(double[] answer, double[][] arr){
         double result = 0;
         for (int i=0; i< answer.length; i++){
-            result += answer[i]*arr[0][i];
+            result = result + answer[i]*arr[0][i];
         }
         return result;
     }
-    // ср трудоемкость этапа
+    // Подсчет средней трудоемкости этапа
     public static double middleWork(double[] returns, double[][] data){
         double result = operationsByProcess(returns, data);
         return result/ operatorExecute(returns, data);
     }
-    // сума среднего кол-ва обращений к основным операторам
+    // Подсчет суммы среднего числа обращений к основным операторам
     public static double operatorExecute(double[] returns, double[][] data){
         double result = 0;
         for (int i = 0; i< returns.length; i++){

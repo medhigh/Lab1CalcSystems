@@ -8,8 +8,8 @@ import Jama.Matrix;
  */
 public class App {
         static double[][] arr =  {
-                {100, 0, 0, 125, 0, 0, 150, 0, 175, 0, 200}, //operations by L operator
                 {0, 25, 50, 0, 100, 125, 0, 150, 0, 70, 0},//bit per file operator(B)
+                {100, 0, 0, 125, 0, 0, 150, 0, 175, 0, 200}, //operations by L operator
                 {1, 0, 0, 1, 0, 0, 2, 0, 3, 0, 3}}; // file number
     public static void main(String[] args) {
         RealMatrix coefficients2 =
